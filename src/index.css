@@ -1,0 +1,243 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* KIIT Finder Design System - Soft, friendly, approachable colors */
+
+@layer base {
+  :root {
+    /* Soft pastel background palette */
+    --background: 21 100% 98%;
+    --foreground: 220 20% 25%;
+
+    /* Card system with soft shadows */
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 25%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 25%;
+
+    /* Primary: Soft peach/coral */
+    --primary: 14 88% 75%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 14 88% 85%;
+    --primary-glow: 14 88% 90%;
+
+    /* Secondary: Sky blue */
+    --secondary: 199 89% 85%;
+    --secondary-foreground: 220 20% 25%;
+    --secondary-light: 199 89% 92%;
+
+    /* Muted: Soft mint green */
+    --muted: 142 52% 90%;
+    --muted-foreground: 220 15% 45%;
+
+    /* Accent: Lavender */
+    --accent: 270 50% 88%;
+    --accent-foreground: 220 20% 25%;
+
+    /* Success: Soft mint */
+    --success: 142 52% 75%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning: Soft yellow */
+    --warning: 45 90% 80%;
+    --warning-foreground: 220 20% 25%;
+
+    --destructive: 0 84% 75%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Soft borders and inputs */
+    --border: 220 13% 88%;
+    --input: 220 13% 95%;
+    --ring: 14 88% 75%;
+
+    --radius: 1.25rem; /* 20px rounded corners */
+
+    /* Gradients for beautiful backgrounds */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary-glow)), hsl(var(--secondary-light)));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(220 13% 98%));
+
+    /* Soft shadows for neumorphism */
+    --shadow-soft: 0 8px 32px hsl(220 13% 88% / 0.3);
+    --shadow-gentle: 0 4px 16px hsl(220 13% 88% / 0.2);
+    --shadow-inset: inset 0 2px 4px hsl(220 13% 88% / 0.2);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  }
+
+  .dark {
+    --background: 220 20% 12%;
+    --foreground: 220 13% 92%;
+
+    --card: 220 20% 15%;
+    --card-foreground: 220 13% 92%;
+
+    --popover: 220 20% 15%;
+    --popover-foreground: 220 13% 92%;
+
+    --primary: 14 88% 75%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 14 88% 65%; /* Adjusted for dark mode */
+    --primary-glow: 14 88% 25%; /* Adjusted for dark mode */
+
+    --secondary: 199 89% 75%;
+    --secondary-foreground: 220 13% 92%;
+    --secondary-light: 199 89% 30%; /* Adjusted for dark mode */
+
+    --muted: 220 20% 20%;
+    --muted-foreground: 220 13% 65%;
+
+    --accent: 270 50% 75%;
+    --accent-foreground: 220 13% 92%;
+
+    --success: 142 52% 65%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 45 90% 70%;
+    --warning-foreground: 220 20% 12%;
+
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 25%;
+    --input: 220 13% 22%;
+    --ring: 14 88% 75%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary-glow)), hsl(var(--secondary-light)));
+    --gradient-card: linear-gradient(145deg, hsl(220 20% 15%), hsl(220 13% 18%));
+
+    --shadow-soft: 0 8px 32px hsl(0 0% 0% / 0.3);
+    --shadow-gentle: 0 4px 16px hsl(0 0% 0% / 0.2);
+    --shadow-inset: inset 0 2px 4px hsl(0 0% 0% / 0.2);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted/30;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/40 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/60;
+  }
+}
+
+@layer components {
+  /* Soft card component */
+  .card-soft {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-gentle);
+    @apply rounded-3xl border border-border/50 backdrop-blur-sm;
+  }
+
+  /* Glassmorphism effect */
+  .glass {
+    background: hsla(0, 0%, 100%, 0.25);
+    backdrop-filter: blur(10px);
+    @apply border border-white/20;
+  }
+
+  /* Neumorphism button */
+  .btn-soft {
+    background: var(--gradient-card);
+    box-shadow: var(--shadow-gentle);
+    @apply rounded-2xl transition-all duration-300 hover:shadow-lg active:scale-95;
+  }
+
+  /* Hero gradient background */
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+
+  /* Floating animation */
+  .float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  /* Gentle pulse */
+  .pulse-soft {
+    animation: pulse-soft 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* Smooth entrance animation */
+  .fade-in-up {
+    animation: fade-in-up 0.6s ease-out;
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Modern status badges */
+  .badge-found {
+    @apply bg-success/20 text-success border border-success/30 rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  .badge-lost {
+    @apply bg-destructive/20 text-destructive border border-destructive/30 rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  .badge-pending {
+    @apply bg-warning/20 text-warning border border-warning/30 rounded-full px-3 py-1 text-xs font-medium;
+  }
+
+  /* Hover effects for cards */
+  .hover-lift {
+    @apply transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-soft;
+  }
+
+  /* Glassmorphism card variant */
+  .card-glass {
+    background: hsla(0, 0%, 100%, 0.15);
+    backdrop-filter: blur(12px);
+    @apply rounded-[20px] border border-white/20 shadow-gentle;
+  }
+
+  /* Primary button with modern styling */
+  .btn-primary-modern {
+    background: var(--gradient-primary);
+    @apply rounded-[20px] shadow-gentle hover:shadow-soft transition-all duration-300 transform hover:scale-105 text-primary-foreground font-medium;
+  }
+}
