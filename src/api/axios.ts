@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
 
 const api = axios.create({
-  baseURL: 'https://lostandfound-1-p1l9.onrender.com/api',
+  baseURL: 'https://lostandfound-1-p1l9.onrender.com/api', // Make sure this is your deployed backend
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
