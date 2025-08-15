@@ -1,9 +1,8 @@
-
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: 'https://lostandfound-1-p1l9.onrender.com/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
