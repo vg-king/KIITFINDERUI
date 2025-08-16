@@ -1,9 +1,21 @@
 import axios from 'axios';
 import { toast } from '@/hooks/use-toast';
 
+// Environment-based URL configuration
+const getBaseURL = () => {
+  if (typeof window !== 'undefined') {
+    // Browser environment
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      return 'http://localhost:8080/api'; // Local development
+    }
+  }
+  // Production or SSR environment
+  return 'https://lostandfound-1-p1l9.onrender.com/api';
+};
+
 const api = axios.create({
-  baseURL: 'https://lostandfound-1-p1l9.onrender.com/api', // Make sure this is your deployed backend
-  timeout: 10000,
+  baseURL: getBaseURL(),
+  timeout: 30000, // Increased timeout for Render cold starts
   headers: {
     'Content-Type': 'application/json',
   },
@@ -30,7 +42,6 @@ api.interceptors.request.use(
 // Response interceptor with comprehensive error handling
 api.interceptors.response.use(
   (response) => {
-    // Handle successful responses
     return response;
   },
   (error) => {
@@ -38,11 +49,19 @@ api.interceptors.response.use(
     
     // Network or timeout errors
     if (!response) {
-      toast({
-        title: "Connection Error",
-        description: "Unable to connect to server. Please check your internet connection.",
-        variant: "destructive",
-      });
+      if (error.code === 'ECONNABORTED') {
+        toast({
+          title: "Request Timeout",
+          description: "The server is taking too long to respond. Please try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Connection Error",
+          description: "Unable to connect to server. Please check your internet connection.",
+          variant: "destructive",
+        });
+      }
       return Promise.reject(error);
     }
 
