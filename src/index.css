@@ -211,17 +211,6 @@
   }
 
   /* Modern status badges */
-  .badge-found {
-    @apply bg-success/20 text-success border border-success/30 rounded-full px-3 py-1 text-xs font-medium;
-  }
-
-  .badge-lost {
-    @apply bg-destructive/20 text-destructive border border-destructive/30 rounded-full px-3 py-1 text-xs font-medium;
-  }
-
-  .badge-pending {
-    @apply bg-warning/20 text-warning border border-warning/30 rounded-full px-3 py-1 text-xs font-medium;
-  }
 
   /* Hover effects for cards */
   .hover-lift {
@@ -239,5 +228,15 @@
   .btn-primary-modern {
     background: var(--gradient-primary);
     @apply rounded-[20px] shadow-gentle hover:shadow-soft transition-all duration-300 transform hover:scale-105 text-primary-foreground font-medium;
+  }
+
+  /* Enhanced card animations */
+  .card-hover {
+    @apply transition-all duration-500 hover:shadow-soft hover:-translate-y-2 hover:scale-[1.02];
+  }
+
+  /* Smooth status transitions */
+  .status-badge {
+    @apply transition-all duration-300 hover:scale-105;
   }
 }

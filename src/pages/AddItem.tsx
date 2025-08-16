@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
+import { ImageUpload } from '@/components/ImageUpload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,6 +18,7 @@ export const AddItem = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [formData, setFormData] = useState<CreateItemRequest>({
     title: '',
     description: '',
@@ -152,6 +154,8 @@ export const AddItem = () => {
                     required
                   />
                 </div>
+
+                <ImageUpload onImageSelect={setSelectedImage} />
 
                 <Button type="submit" className="w-full" size="lg" disabled={loading}>
                   {loading ? "Reporting..." : "Report Item"}

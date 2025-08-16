@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ImageUpload } from "@/components/ImageUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Upload, MapPin, Calendar, Tag, Heart } from "lucide-react";
+import { MapPin, Tag, Heart } from "lucide-react";
 import { itemService } from "@/services/itemService";
 import { CreateItemRequest } from "@/types/item";
 import { useToast } from "@/hooks/use-toast";
@@ -44,6 +45,7 @@ export const ReportFound = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [formData, setFormData] = useState<CreateItemRequest>({
     title: "",
     description: "",
@@ -183,15 +185,7 @@ export const ReportFound = () => {
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="photo">Add Photo (Recommended)</Label>
-                      <div className="border-2 border-dashed border-border rounded-2xl p-8 text-center hover:border-primary transition-colors cursor-pointer">
-                        <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                        <p className="text-sm text-muted-foreground">
-                          A photo helps owners identify their item quickly
-                        </p>
-                      </div>
-                    </div>
+                    <ImageUpload onImageSelect={setSelectedImage} />
 
                     <Button
                       type="submit"

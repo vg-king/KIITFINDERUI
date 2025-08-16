@@ -1,55 +1,65 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SearchBar } from "@/components/SearchBar";
-import { ItemCard } from "@/components/ItemCard";
+import { ItemCardNew } from "@/components/ItemCardNew";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Heart, Plus, Search, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Item } from "@/types/item";
 import heroImage from "@/assets/hero-illustration.jpg";
 
 // Mock data for demonstration
-const mockItems = [
+const mockItems: Item[] = [
   {
-    id: "1",
+    id: 1,
     title: "MacBook Pro 13-inch",
     description: "Silver MacBook Pro with stickers. Lost near Library.",
     category: "Electronics",
-    status: "lost" as const,
-    date: "2024-01-20",
+    status: "LOST",
+    dateReported: "2024-01-20",
     location: "Central Library",
-    contactPerson: "Rahul S.",
+    contactInfo: "+91 98765 43210",
+    userId: 1,
+    userName: "Rahul S.",
   },
   {
-    id: "2",
+    id: 2,
     title: "Blue Water Bottle",
     description: "Insulated blue water bottle with KIIT logo.",
-    category: "Other",
-    status: "found" as const,
-    date: "2024-01-19",
+    category: "Accessories",
+    status: "FOUND",
+    dateReported: "2024-01-19",
     location: "Academic Block 3",
-    contactPerson: "Priya M.",
+    contactInfo: "priya.m@kiit.ac.in",
+    userId: 2,
+    userName: "Priya M.",
   },
   {
-    id: "3",
+    id: 3,
     title: "Physics Textbook",
     description: "Resnick Halliday Physics textbook, lots of notes inside.",
     category: "Books",
-    status: "lost" as const,
-    date: "2024-01-18",
+    status: "LOST",
+    dateReported: "2024-01-18",
     location: "Hostel B",
-    contactPerson: "Arjun K.",
+    contactInfo: "+91 87654 32109",
+    userId: 3,
+    userName: "Arjun K.",
   },
   {
-    id: "4",
+    id: 4,
     title: "Black Earphones",
     description: "Sony WH-1000XM4 noise cancelling headphones in black.",
     category: "Electronics",
-    status: "found" as const,
-    date: "2024-01-17",
+    status: "FOUND",
+    dateReported: "2024-01-17",
     location: "Cafeteria",
-    contactPerson: "Sneha L.",
+    contactInfo: "sneha.l@kiit.ac.in",
+    userId: 4,
+    userName: "Sneha L.",
   },
 ];
 
@@ -124,28 +134,36 @@ const Index = () => {
 
       {/* Stats Section */}
       <section className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          <div className="card-soft p-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-primary flex items-center justify-center">
-              <Search className="w-8 h-8 text-primary-foreground" />
-            </div>
-            <h3 className="font-semibold text-2xl text-foreground mb-2">150+</h3>
-            <p className="text-muted-foreground">Items Reported</p>
-          </div>
-          <div className="card-soft p-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-secondary flex items-center justify-center">
-              <Heart className="w-8 h-8 text-secondary-foreground" />
-            </div>
-            <h3 className="font-semibold text-2xl text-foreground mb-2">95+</h3>
-            <p className="text-muted-foreground">Happy Reunions</p>
-          </div>
-          <div className="card-soft p-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-primary flex items-center justify-center">
-              <TrendingUp className="w-8 h-8 text-primary-foreground" />
-            </div>
-            <h3 className="font-semibold text-2xl text-foreground mb-2">500+</h3>
-            <p className="text-muted-foreground">Active Users</p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20 rounded-3xl overflow-hidden">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-primary flex items-center justify-center shadow-gentle">
+                <Search className="w-8 h-8 text-primary-foreground" />
+              </div>
+              <h3 className="font-bold text-3xl text-foreground mb-2">150+</h3>
+              <p className="text-muted-foreground font-medium">Items Reported</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-success/10 to-success/5 border-success/20 rounded-3xl overflow-hidden">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-success to-success/80 flex items-center justify-center shadow-gentle">
+                <Heart className="w-8 h-8 text-success-foreground" />
+              </div>
+              <h3 className="font-bold text-3xl text-foreground mb-2">95+</h3>
+              <p className="text-muted-foreground font-medium">Happy Reunions</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-secondary/10 to-secondary/5 border-secondary/20 rounded-3xl overflow-hidden">
+            <CardContent className="p-8 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-secondary flex items-center justify-center shadow-gentle">
+                <TrendingUp className="w-8 h-8 text-secondary-foreground" />
+              </div>
+              <h3 className="font-bold text-3xl text-foreground mb-2">500+</h3>
+              <p className="text-muted-foreground font-medium">Active Users</p>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -162,7 +180,7 @@ const Index = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {mockItems.map((item) => (
-            <ItemCard key={item.id} {...item} />
+            <ItemCardNew key={item.id} item={item} />
           ))}
         </div>
         
