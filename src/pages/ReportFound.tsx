@@ -165,12 +165,12 @@ export const ReportFound = () => {
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="title">What did you find? *</Label>
+                      <Label htmlFor="name">What did you find? *</Label>
                       <Input
-                        id="title"
+                        id="name"
                         placeholder="e.g., iPhone with blue case, Red backpack"
-                        value={formData.title}
-                        onChange={(e) => handleInputChange("title", e.target.value)}
+                        value={formData.name}
+                        onChange={(e) => handleInputChange("name", e.target.value)}
                         className="h-12 rounded-2xl"
                         required
                       />

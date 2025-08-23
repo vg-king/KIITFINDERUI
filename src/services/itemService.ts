@@ -36,7 +36,7 @@ export const itemService = {
   async createItem(item: CreateItemRequest): Promise<Item> {
     try {
       // Validate required fields
-      if (!item.title?.trim() || !item.description?.trim() || !item.category?.trim()) {
+      if (!item.name?.trim() || !item.description?.trim() || !item.category?.trim()) {
         toast({
           title: "Validation Error",
           description: "Please fill in all required fields.",
@@ -151,7 +151,7 @@ export const itemService = {
   }): Item[] {
     return items.filter(item => {
       const searchMatch = !params.search || 
-        item.title.toLowerCase().includes(params.search.toLowerCase()) ||
+        (item.name || item.title || '').toLowerCase().includes(params.search.toLowerCase()) ||
         item.description.toLowerCase().includes(params.search.toLowerCase());
       
       const categoryMatch = !params.category || item.category === params.category;
