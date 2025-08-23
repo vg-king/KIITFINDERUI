@@ -71,8 +71,8 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false }: ItemCa
       <div className="p-3 sm:p-6 pb-0">
         <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
           {/* User Avatar */}
-          <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shadow-lg border-2 border-white/20 shrink-0">
-            <User className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shadow-lg border-2 border-white/20 ring-1 ring-primary/30 shrink-0">
+            <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           {/* User Info */}
           <div className="flex-1 min-w-0">
@@ -133,9 +133,9 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false }: ItemCa
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
           {/* Category */}
           {item.category && (
-            <div className="flex items-center gap-2 p-2 rounded-lg sm:rounded-xl bg-black/20 border border-gray-700/30">
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shrink-0">
-                <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
+            <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg sm:rounded-xl bg-black/20 border border-gray-700/30">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shrink-0 shadow-md">
+                <Star className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-gray-400">Category</p>
@@ -146,9 +146,9 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false }: ItemCa
 
           {/* Location */}
           {item.location && (
-            <div className="flex items-center gap-2 p-2 rounded-lg sm:rounded-xl bg-black/20 border border-gray-700/30">
-              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shrink-0">
-                <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
+            <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg sm:rounded-xl bg-black/20 border border-gray-700/30">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shrink-0 shadow-md">
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-gray-400">Location</p>
@@ -161,10 +161,10 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false }: ItemCa
         {/* Reward - Prominent Display */}
         {item.reward && (
           <div className="mb-3 sm:mb-4">
-            <div className="relative overflow-hidden p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-red-500/20 border border-yellow-500/30 group-hover:from-yellow-500/30 group-hover:via-orange-500/30 group-hover:to-red-500/30 transition-all duration-300">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shrink-0">
-                  <Award className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            <div className="relative overflow-hidden p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-red-500/20 border border-yellow-500/30 group-hover:from-yellow-500/30 group-hover:via-orange-500/30 group-hover:to-red-500/30 transition-all duration-300">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shrink-0 ring-2 ring-yellow-400/30">
+                  <Award className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs font-medium text-yellow-200 uppercase tracking-wider">Reward</p>

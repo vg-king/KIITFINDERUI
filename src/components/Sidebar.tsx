@@ -85,9 +85,9 @@ export const Sidebar = () => {
     <div className="w-64 bg-gradient-card border-r border-border/50 h-screen flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-border/50">
-        <Link to="/dashboard" className="flex items-center space-x-2">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-gentle">
-            <Search className="w-5 h-5 text-primary-foreground" />
+        <Link to="/dashboard" className="flex items-center space-x-3">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-gentle ring-2 ring-primary/20">
+            <Search className="w-6 h-6 text-primary-foreground" />
           </div>
           <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
             KIIT Finder
@@ -98,18 +98,18 @@ export const Sidebar = () => {
       {/* User Info */}
       <div className="p-4 border-b border-border/50">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-secondary flex items-center justify-center">
-            <User className="w-5 h-5 text-secondary-foreground" />
+          <div className="w-12 h-12 rounded-full bg-gradient-secondary flex items-center justify-center shadow-lg ring-2 ring-secondary/30">
+            <User className="w-6 h-6 text-secondary-foreground" />
           </div>
-          <div>
-            <p className="font-medium text-foreground">{user?.name || 'Guest User'}</p>
+          <div className="flex-1 min-w-0">
+            <p className="font-medium text-foreground truncate">{user?.name || 'Guest User'}</p>
             <div className="flex items-center gap-2">
-              <span className={`text-xs px-2 py-1 rounded-full ${
+              <span className={`text-xs px-2 py-1 rounded-full font-medium ${
                 isLoggedIn 
                   ? userRole === 'ADMIN' 
-                    ? 'bg-purple-500/20 text-purple-300' 
-                    : 'bg-blue-500/20 text-blue-300'
-                  : 'bg-gray-500/20 text-gray-400'
+                    ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' 
+                    : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                  : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
               }`}>
                 {isLoggedIn ? userRole : 'Guest'}
               </span>
