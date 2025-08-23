@@ -68,28 +68,44 @@ export const authService = {
       localStorage.removeItem('user');
       
       const response = await api.post('/auth/register', userData);
-      const { token, user } = response.data;
       
-      if (!token || !user) {
-        throw new Error('Invalid response from server');
+      // Handle different response formats from backend
+      let token, user;
+      
+      if (response.data.token && response.data.user) {
+        // Backend returns both token and user
+        token = response.data.token;
+        user = response.data.user;
+      } else if (response.data.token) {
+        // Backend returns only token, need to fetch user
+        token = response.data.token;
+        
+        // Store token temporarily to make authenticated request
+        localStorage.setItem('token', token);
+        
+        try {
+          user = await this.getCurrentUser();
+        } catch (error) {
+          localStorage.removeItem('token');
+          throw new Error('Failed to get user information after registration');
+        }
+      } else {
+        throw new Error('Invalid response from server - no token received');
       }
 
-      // Validate token before storing
+      // Validate token before storing permanently
       if (this.isValidToken(token)) {
         this.storeAuthData(token, user);
         
-        toast({
-          title: "Account Created!",
-          description: `Welcome to KIIT Finder, ${user.name}!`,
-          variant: "default",
-        });
-        
-        return response.data;
+        // Don't show toast here - let the Auth component handle it
+        return { token, user };
       } else {
         throw new Error('Invalid token received');
       }
     } catch (error: any) {
-      // Error is already handled by axios interceptor
+      // Remove any temporarily stored token on error
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       throw error;
     }
   },

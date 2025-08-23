@@ -52,21 +52,37 @@ export const Auth = () => {
     setIsLoading(true);
     
     try {
-      await authService.register({
+      const result = await authService.register({
         name: registerData.name,
         email: registerData.email,
         password: registerData.password,
         role: "ROLE_USER" // Backend expects ROLE_USER format
       });
+      
+      // Registration successful
       toast({
-        title: "Account created!",
-        description: "Welcome to KIIT Finder! You can now start reporting items.",
+        title: "Account created successfully! 🎉",
+        description: `Welcome to KIIT Finder, ${result.user.name}! You can now start reporting items.`,
+        variant: "default",
       });
+      
+      // Navigate to dashboard after successful registration
       navigate('/dashboard');
     } catch (error: any) {
+      console.error('Registration error:', error);
+      
+      // Handle different types of errors
+      let errorMessage = "Failed to create account. Please try again.";
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       toast({
         title: "Registration failed",
-        description: error.response?.data?.message || "Failed to create account. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

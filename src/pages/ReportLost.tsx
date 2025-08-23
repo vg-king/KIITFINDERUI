@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Upload, MapPin, Calendar, Tag, AlertCircle } from "lucide-react";
+import { ImageUpload } from "@/components/ImageUpload";
+import { MapPin, Calendar, Tag, AlertCircle, Camera, Award } from "lucide-react";
 import { itemService } from "@/services/itemService";
 import { CreateItemRequest } from "@/types/item";
 import { useToast } from "@/hooks/use-toast";
@@ -44,17 +45,54 @@ export const ReportLost = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<any>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
   const [formData, setFormData] = useState<CreateItemRequest>({
     title: "",
     description: "",
     category: "",
     status: "LOST",
     location: "",
-    contactInfo: ""
+    contactInfo: "",
+    userName: "", // Add userName field
+    imageUrl: "", // Initialize with empty string
+    reward: "" // Add reward field
   });
 
   const handleInputChange = (field: keyof CreateItemRequest, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleImageUploaded = (uploadResult: any) => {
+    if (uploadResult) {
+      setUploadedImage(uploadResult);
+      setImagePreview(uploadResult.imageUrl); // Fixed: was uploadResult.url
+      setFormData(prev => ({ 
+        ...prev, 
+        imageUrl: uploadResult.imageUrl // Fixed: was uploadResult.url
+      }));
+    } else {
+      setUploadedImage(null);
+      setImagePreview('');
+      setFormData(prev => ({ 
+        ...prev, 
+        imageUrl: '' 
+      }));
+    }
+  };
+
+  const handleImageSelect = (file: File | null) => {
+    if (file) {
+      // Create local preview while uploading
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else if (!uploadedImage) {
+      // Only clear preview if no uploaded image
+      setImagePreview('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,13 +100,30 @@ export const ReportLost = () => {
     setIsSubmitting(true);
     
     try {
-      await itemService.createItem(formData);
+      // Create payload that matches backend expectations
+      const submitData = {
+        name: formData.title, // Backend expects 'name' field
+        description: formData.description,
+        category: formData.category,
+        location: formData.location,
+        status: formData.status,
+        imageUrl: formData.imageUrl,
+        reward: formData.reward,
+        contactInfo: formData.contactInfo
+      };
+      
+      // Submit the form data with the image URL
+      await itemService.createItem(submitData);
+      
       toast({
-        title: "Success!",
-        description: "Your lost item has been reported successfully.",
+        title: "Success! 🎉",
+        description: "Your lost item has been reported successfully. Our community will help you find it!",
+        variant: "default",
       });
+      
       navigate('/dashboard');
     } catch (error) {
+      console.error('Submit error:', error);
       toast({
         title: "Error",
         description: "Failed to report item. Please try again.",
@@ -119,6 +174,21 @@ export const ReportLost = () => {
                         className="h-12 rounded-2xl"
                         required
                       />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="userName">Your Name *</Label>
+                      <Input
+                        id="userName"
+                        placeholder="e.g., Vishnu, Arjun, Priya"
+                        value={formData.userName}
+                        onChange={(e) => handleInputChange("userName", e.target.value)}
+                        className="h-12 rounded-2xl"
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        This name will be displayed to others who find your item
+                      </p>
                     </div>
 
                     <div className="space-y-2">
@@ -183,14 +253,40 @@ export const ReportLost = () => {
                       />
                     </div>
 
+                    {/* Reward Field */}
+                    <div className="space-y-2">
+                      <Label htmlFor="reward">Reward Amount (Optional)</Label>
+                      <div className="relative">
+                        <Input
+                          id="reward"
+                          type="number"
+                          placeholder="e.g., 500"
+                          value={formData.reward || ""}
+                          onChange={(e) => handleInputChange("reward", e.target.value)}
+                          className="h-12 rounded-2xl pl-12"
+                          min="0"
+                        />
+                        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+                          <Award className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-sm font-medium text-muted-foreground">₹</span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Optional reward amount for whoever finds and returns your item
+                      </p>
+                    </div>
+
                     <div className="space-y-2">
                       <Label htmlFor="photo">Add Photo (Optional)</Label>
-                      <div className="border-2 border-dashed border-border rounded-2xl p-8 text-center hover:border-primary transition-colors cursor-pointer">
-                        <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                        <p className="text-sm text-muted-foreground">
-                          Drop an image here or click to browse
-                        </p>
-                      </div>
+                      <ImageUpload
+                        onImageUploaded={handleImageUploaded}
+                        onImageSelect={handleImageSelect}
+                        preview={imagePreview}
+                        disabled={isSubmitting}
+                      />
+                      <p className="text-xs text-muted-foreground text-center">
+                        Adding a photo helps others identify your item more easily
+                      </p>
                     </div>
 
                     <Button
@@ -228,7 +324,7 @@ export const ReportLost = () => {
                 <li>• Include unique features or identifying marks</li>
                 <li>• Add a clear photo if you have one</li>
                 <li>• Check back regularly for responses</li>
-                <li>• Consider offering a small reward</li>
+                <li>• Consider offering a reward to increase chances of recovery</li>
               </ul>
             </div>
           </div>

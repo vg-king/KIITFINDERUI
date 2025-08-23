@@ -9,6 +9,8 @@ import Index from "./pages/Index";
 import { Auth } from "./pages/Auth";
 import { Dashboard } from "./pages/Dashboard";
 import { AddItem } from "./pages/AddItem";
+import { ReportLost } from "./pages/ReportLost";
+import { ReportFound } from "./pages/ReportFound";
 import { MyItems } from "./pages/MyItems";
 import { ItemDetails } from "./pages/ItemDetails";
 import { AdminPanel } from "./pages/AdminPanel";
@@ -31,7 +33,12 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <BrowserRouter
+          future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true
+          }}
+        >
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<AuthRoute />} />
@@ -50,6 +57,22 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <AddItem />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/report-lost" 
+              element={
+                <ProtectedRoute>
+                  <ReportLost />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/report-found" 
+              element={
+                <ProtectedRoute>
+                  <ReportFound />
                 </ProtectedRoute>
               } 
             />
@@ -80,9 +103,7 @@ const App = () => {
               } 
             />
 
-            {/* Remove old routes that are no longer needed */}
-            <Route path="/report-lost" element={<Navigate to="/add-item" replace />} />
-            <Route path="/report-found" element={<Navigate to="/add-item" replace />} />
+            {/* Remove old redirect routes since we're keeping the dedicated pages */}
             
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />

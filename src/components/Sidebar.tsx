@@ -13,7 +13,8 @@ import {
   LogOut,
   Search,
   Shield,
-  AlertCircle
+  AlertCircle,
+  CheckCircle
 } from 'lucide-react';
 
 interface NavItem {
@@ -53,7 +54,8 @@ export const Sidebar = () => {
   // Define all navigation items with role requirements
   const allMenuItems: NavItem[] = [
     { icon: Home, label: 'Dashboard', path: '/dashboard' },
-    { icon: Plus, label: 'Add Item', path: '/add-item', requiredRole: 'USER' },
+    { icon: AlertCircle, label: 'Report Lost', path: '/report-lost', requiredRole: 'USER' },
+    { icon: CheckCircle, label: 'Report Found', path: '/report-found', requiredRole: 'USER' },
     { icon: List, label: 'My Items', path: '/my-items', requiredRole: 'USER' },
     { icon: Shield, label: 'Admin Panel', path: '/admin', requiredRole: 'ADMIN' },
   ];
@@ -93,41 +95,28 @@ export const Sidebar = () => {
         </Link>
       </div>
 
-      {/* User Info - Only show auth warning if not logged in */}
-      {!isLoggedIn && (
-        <div className="p-4 border-b border-border/50">
-          <div className="flex items-center space-x-3 text-warning">
-            <AlertCircle className="w-5 h-5" />
-            <div>
-              <p className="font-medium text-sm">Auth Issue</p>
-              <p className="text-xs">Please log in again</p>
+      {/* User Info */}
+      <div className="p-4 border-b border-border/50">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-full bg-gradient-secondary flex items-center justify-center">
+            <User className="w-5 h-5 text-secondary-foreground" />
+          </div>
+          <div>
+            <p className="font-medium text-foreground">{user?.name || 'Guest User'}</p>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs px-2 py-1 rounded-full ${
+                isLoggedIn 
+                  ? userRole === 'ADMIN' 
+                    ? 'bg-purple-500/20 text-purple-300' 
+                    : 'bg-blue-500/20 text-blue-300'
+                  : 'bg-gray-500/20 text-gray-400'
+              }`}>
+                {isLoggedIn ? userRole : 'Guest'}
+              </span>
             </div>
           </div>
         </div>
-      )}
-      
-      {/* Show user info when logged in */}
-      {isLoggedIn && (
-        <div className="p-4 border-b border-border/50">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-secondary flex items-center justify-center">
-              <User className="w-5 h-5 text-secondary-foreground" />
-            </div>
-            <div>
-              <p className="font-medium text-foreground">{user?.name}</p>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs px-2 py-1 rounded-full ${
-                  userRole === 'ADMIN' 
-                    ? 'bg-destructive/20 text-destructive' 
-                    : 'bg-success/20 text-success'
-                }`}>
-                  {userRole}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
 
       {/* Navigation */}
       <nav className="flex-1 p-4">
