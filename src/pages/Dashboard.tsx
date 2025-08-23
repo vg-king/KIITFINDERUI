@@ -67,7 +67,7 @@ export const Dashboard = () => {
 
     if (searchTerm) {
       filtered = filtered.filter(item =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.name || item.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.location.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -137,57 +137,61 @@ export const Dashboard = () => {
       />
       
       <div className="flex">
-        <Sidebar />
+        {/* Hide sidebar on mobile, show as overlay when needed */}
+        <div className="hidden lg:block">
+          <Sidebar />
+        </div>
         
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-3 sm:p-6 lg:p-8">
           <div className="max-w-7xl mx-auto">
             {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                Lost & Found Dashboard
+            <div className="mb-4 sm:mb-6 lg:mb-8">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                Lost & Found
               </h1>
-              <p className="text-muted-foreground text-lg">
-                Browse all reported lost and found items • {filteredItems.length} items found
+              <p className="text-muted-foreground text-sm sm:text-base lg:text-lg">
+                Browse all items • {filteredItems.length} found
               </p>
             </div>
 
             {/* Category Tabs */}
-            <Tabs value={currentView} onValueChange={(value) => handleViewChange(value as 'all' | 'lost' | 'found')} className="mb-8">
-              <TabsList className="grid w-full max-w-md grid-cols-3 rounded-2xl p-1 bg-card/50 backdrop-blur-sm border border-border/30">
-                <TabsTrigger value="all" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-300">
-                  <Package className="w-4 h-4 mr-2" />
-                  All Items
-                  <Badge variant="secondary" className="ml-2 text-xs">
+            <Tabs value={currentView} onValueChange={(value) => handleViewChange(value as 'all' | 'lost' | 'found')} className="mb-4 sm:mb-6 lg:mb-8">
+              <TabsList className="grid w-full grid-cols-3 rounded-xl sm:rounded-2xl p-1 bg-card/50 backdrop-blur-sm border border-border/30 text-xs sm:text-sm">
+                <TabsTrigger value="all" className="rounded-lg sm:rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-300 px-2 sm:px-4">
+                  <Package className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">All Items</span>
+                  <span className="sm:hidden">All</span>
+                  <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs px-1">
                     {items.length}
                   </Badge>
                 </TabsTrigger>
-                <TabsTrigger value="lost" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-300">
-                  <AlertCircle className="w-4 h-4 mr-2" />
+                <TabsTrigger value="lost" className="rounded-lg sm:rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-300 px-2 sm:px-4">
+                  <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                   Lost
-                  <Badge variant="secondary" className="ml-2 text-xs">
+                  <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs px-1">
                     {items.filter(item => item.status === 'LOST').length}
                   </Badge>
                 </TabsTrigger>
-                <TabsTrigger value="found" className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-300">
-                  <CheckCircle className="w-4 h-4 mr-2" />
+                <TabsTrigger value="found" className="rounded-lg sm:rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-300 px-2 sm:px-4">
+                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                   Found
-                  <Badge variant="secondary" className="ml-2 text-xs">
+                  <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs px-1">
                     {items.filter(item => item.status === 'FOUND').length}
                   </Badge>
                 </TabsTrigger>
               </TabsList>
 
               {/* Filter Section */}
-              <div className="mb-8 mt-6">
-                <div className="flex flex-col lg:flex-row gap-4 mb-4">
+              <div className="mb-4 sm:mb-6 lg:mb-8 mt-4 sm:mt-6">
+                <div className="flex flex-col gap-3 sm:gap-4 mb-3 sm:mb-4">
                   {/* Search Bar */}
                   <div className="flex-1 relative">
-                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                     <Input
-                      placeholder="Search by title, description, or location..."
+                      placeholder="Search items..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-12 h-12 rounded-[16px] border-border/30 bg-card/50 backdrop-blur-sm"
+                      className="pl-10 sm:pl-12 h-10 sm:h-12 rounded-lg sm:rounded-[16px] border-border/30 bg-card/50 backdrop-blur-sm text-sm"
                     />
                   </div>
 
@@ -195,12 +199,13 @@ export const Dashboard = () => {
                   <Button
                     variant="outline"
                     onClick={() => setShowFilters(!showFilters)}
-                    className="rounded-[16px] border-border/30 h-12 px-6"
+                    className="rounded-lg sm:rounded-[16px] border-border/30 h-10 sm:h-12 px-4 sm:px-6 text-sm"
                   >
-                    <Filter className="w-5 h-5 mr-2" />
-                    Filters
+                    <Filter className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                    <span className="hidden sm:inline">Filters</span>
+                    <span className="sm:hidden">Filter</span>
                     <ChevronDown 
-                      className={`w-4 h-4 ml-2 transition-transform duration-300 ${
+                      className={`w-3 h-3 sm:w-4 sm:h-4 ml-2 transition-transform duration-300 ${
                         showFilters ? 'rotate-180' : ''
                       }`} 
                     />
@@ -209,10 +214,10 @@ export const Dashboard = () => {
 
                 {/* Expandable Filters */}
                 {showFilters && (
-                  <div className="bg-card/50 backdrop-blur-sm rounded-[20px] p-6 border border-border/30 fade-in-up">
-                    <div className="flex flex-wrap gap-4">
+                  <div className="bg-card/50 backdrop-blur-sm rounded-xl sm:rounded-[20px] p-4 sm:p-6 border border-border/30 fade-in-up">
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
                       <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger className="w-[180px] rounded-[12px]">
+                        <SelectTrigger className="w-full sm:w-[180px] rounded-lg sm:rounded-[12px] h-10 text-sm">
                           <SelectValue placeholder="Status" />
                         </SelectTrigger>
                         <SelectContent>
@@ -223,7 +228,7 @@ export const Dashboard = () => {
                       </Select>
 
                       <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                        <SelectTrigger className="w-[200px] rounded-[12px]">
+                        <SelectTrigger className="w-full sm:w-[200px] rounded-lg sm:rounded-[12px] h-10 text-sm">
                           <SelectValue placeholder="Category" />
                         </SelectTrigger>
                         <SelectContent>
@@ -237,7 +242,7 @@ export const Dashboard = () => {
                       <Button 
                         variant="ghost" 
                         onClick={clearFilters}
-                        className="rounded-[12px] text-muted-foreground hover:text-foreground"
+                        className="rounded-lg sm:rounded-[12px] text-muted-foreground hover:text-foreground text-sm h-10"
                       >
                         Clear Filters
                       </Button>
@@ -247,25 +252,25 @@ export const Dashboard = () => {
 
                 {/* Active Filters Display */}
                 {(searchTerm || statusFilter !== 'all' || categoryFilter !== 'all' || currentView !== 'all') && (
-                  <div className="flex flex-wrap gap-2 mt-4">
+                  <div className="flex flex-wrap gap-1 sm:gap-2 mt-3 sm:mt-4">
                     {currentView !== 'all' && (
-                      <Badge variant="secondary" className="rounded-full">
-                        View: {currentView === 'lost' ? 'Lost Items' : 'Found Items'}
+                      <Badge variant="secondary" className="rounded-full text-xs px-2 py-1">
+                        {currentView === 'lost' ? 'Lost' : 'Found'}
                       </Badge>
                     )}
                     {searchTerm && (
-                      <Badge variant="secondary" className="rounded-full">
-                        Search: "{searchTerm}"
+                      <Badge variant="secondary" className="rounded-full text-xs px-2 py-1">
+                        "{searchTerm}"
                       </Badge>
                     )}
                     {statusFilter !== 'all' && (
-                      <Badge variant="secondary" className="rounded-full">
-                        Status: {statusFilter}
+                      <Badge variant="secondary" className="rounded-full text-xs px-2 py-1">
+                        {statusFilter}
                       </Badge>
                     )}
                     {categoryFilter !== 'all' && (
-                      <Badge variant="secondary" className="rounded-full">
-                        Category: {categoryFilter}
+                      <Badge variant="secondary" className="rounded-full text-xs px-2 py-1">
+                        {categoryFilter}
                       </Badge>
                     )}
                   </div>
@@ -315,12 +320,12 @@ export const Dashboard = () => {
     return (
       <>
         {/* Responsive Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 mb-6 sm:mb-8">
           {displayedItems.map((item, index) => (
             <div 
               key={item.id} 
               className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700"
-              style={{ animationDelay: `${index * 100}ms` }}
+              style={{ animationDelay: `${index * 50}ms` }}
             >
               <ItemCardNew item={item} />
             </div>
@@ -334,16 +339,23 @@ export const Dashboard = () => {
               onClick={loadMoreItems}
               disabled={loadingMore}
               size="lg"
-              className="rounded-xl px-8 py-3 transition-all duration-300 hover:shadow-lg"
+              className="rounded-xl px-6 sm:px-8 py-2 sm:py-3 transition-all duration-300 hover:shadow-lg text-sm"
               variant="outline"
             >
               {loadingMore ? (
                 <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" />
                   Loading...
                 </>
               ) : (
-                `Load More (${filteredItems.length - displayedItems.length} remaining)`
+                <>
+                  <span className="hidden sm:inline">
+                    Load More ({filteredItems.length - displayedItems.length} remaining)
+                  </span>
+                  <span className="sm:hidden">
+                    Load More ({filteredItems.length - displayedItems.length})
+                  </span>
+                </>
               )}
             </Button>
           </div>

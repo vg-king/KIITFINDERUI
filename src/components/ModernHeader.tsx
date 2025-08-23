@@ -44,31 +44,33 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
 
   const getViewButtonClass = (view: string) => {
     return currentView === view 
-      ? "bg-primary text-primary-foreground rounded-full px-4 py-2 text-sm font-medium transition-all duration-300"
-      : "bg-muted/50 text-muted-foreground hover:bg-muted rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 hover:text-foreground";
+      ? "bg-primary text-primary-foreground rounded-full px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-300"
+      : "bg-muted/50 text-muted-foreground hover:bg-muted rounded-full px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-300 hover:text-foreground";
   };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
-      <div className="container mx-auto flex h-16 items-center justify-between px-6">
+      <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-3 sm:px-6">
         
         {/* Primary Action Button */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-start sm:justify-center">
           <Link to="/report-lost">
-            <Button className="btn-primary-modern px-8 py-3 text-base font-semibold shadow-lg">
-              <Plus className="w-5 h-5 mr-2" />
-              Report Lost Item
+            <Button className="btn-primary-modern px-3 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold shadow-lg">
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Report Lost Item</span>
+              <span className="sm:hidden">Report</span>
             </Button>
           </Link>
         </div>
 
-        {/* View Toggle Buttons */}
-        <div className="flex items-center space-x-2 bg-muted/30 p-1 rounded-full">
+        {/* View Toggle Buttons - Hidden on very small screens */}
+        <div className="hidden xs:flex items-center space-x-1 sm:space-x-2 bg-muted/30 p-1 rounded-full">
           <button
             onClick={() => onViewChange?.('all')}
             className={getViewButtonClass('all')}
           >
-            All Items
+            <span className="hidden sm:inline">All Items</span>
+            <span className="sm:hidden">All</span>
           </button>
           <button
             onClick={() => onViewChange?.('lost')}
@@ -85,17 +87,19 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
         </div>
 
         {/* User Profile & Actions */}
-        <div className="flex-1 flex justify-end items-center space-x-4">
+        <div className="flex-1 flex justify-end items-center space-x-2 sm:space-x-4">
           
-          {/* Dark Mode Toggle */}
-          <FancyToggle />
+          {/* Dark Mode Toggle - Hidden on small screens */}
+          <div className="hidden sm:block">
+            <FancyToggle />
+          </div>
 
           {/* User Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                <div className="h-10 w-10 rounded-full bg-gradient-primary flex items-center justify-center">
-                  <User className="h-5 w-5 text-primary-foreground" />
+              <Button variant="ghost" className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-full">
+                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-gradient-primary flex items-center justify-center">
+                  <User className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
                 </div>
               </Button>
             </DropdownMenuTrigger>
@@ -115,6 +119,14 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
               </DropdownMenuLabel>
               
               <DropdownMenuSeparator />
+              
+              {/* Dark Mode Toggle for mobile */}
+              <div className="sm:hidden">
+                <DropdownMenuItem>
+                  <FancyToggle />
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+              </div>
               
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
