@@ -48,7 +48,7 @@ export const ReportFound = () => {
   const [uploadedImage, setUploadedImage] = useState<any>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
   const [formData, setFormData] = useState<CreateItemRequest>({
-    title: "",
+    name: "",
     description: "",
     category: "",
     status: "FOUND",
@@ -56,7 +56,7 @@ export const ReportFound = () => {
     contactInfo: "",
     userName: "", // Add userName field
     imageUrl: "", // Initialize with empty string
-    reward: "" // Add reward field
+    reward: "" // Add reward field as string for form input
   });
 
   const handleInputChange = (field: keyof CreateItemRequest, value: string) => {
@@ -102,13 +102,13 @@ export const ReportFound = () => {
     try {
       // Create payload that matches backend expectations
       const submitData = {
-        name: formData.title, // Backend expects 'name' field
+        name: formData.name, // Backend expects 'name' field
         description: formData.description,
         category: formData.category,
         location: formData.location,
         status: formData.status,
         imageUrl: formData.imageUrl,
-        reward: formData.reward,
+        reward: formData.reward, // Keep as string, backend converts to number
         contactInfo: formData.contactInfo
       };
       

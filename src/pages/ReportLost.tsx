@@ -48,7 +48,7 @@ export const ReportLost = () => {
   const [uploadedImage, setUploadedImage] = useState<any>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
   const [formData, setFormData] = useState<CreateItemRequest>({
-    title: "",
+    name: "",
     description: "",
     category: "",
     status: "LOST",
@@ -56,7 +56,7 @@ export const ReportLost = () => {
     contactInfo: "",
     userName: "", // Add userName field
     imageUrl: "", // Initialize with empty string
-    reward: "" // Add reward field
+    reward: "" // Add reward field as string
   });
 
   const handleInputChange = (field: keyof CreateItemRequest, value: string) => {
@@ -102,7 +102,7 @@ export const ReportLost = () => {
     try {
       // Create payload that matches backend expectations
       const submitData = {
-        name: formData.title, // Backend expects 'name' field
+        name: formData.name, // Backend expects 'name' field
         description: formData.description,
         category: formData.category,
         location: formData.location,
@@ -165,12 +165,12 @@ export const ReportLost = () => {
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="title">Item Name *</Label>
+                      <Label htmlFor="name">Item Name *</Label>
                       <Input
-                        id="title"
+                        id="name"
                         placeholder="e.g., MacBook Pro 13-inch, Blue Water Bottle"
-                        value={formData.title}
-                        onChange={(e) => handleInputChange("title", e.target.value)}
+                        value={formData.name}
+                        onChange={(e) => handleInputChange("name", e.target.value)}
                         className="h-12 rounded-2xl"
                         required
                       />
