@@ -86,7 +86,7 @@ export const Sidebar = () => {
       {/* Logo */}
       <div className="p-6 border-b border-border/50">
         <Link to="/dashboard" className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-gentle ring-2 ring-primary/20">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-gentle ring-2 ring-primary/20 shrink-0 aspect-square">
             <Search className="w-6 h-6 text-primary-foreground" />
           </div>
           <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
@@ -98,7 +98,7 @@ export const Sidebar = () => {
       {/* User Info */}
       <div className="p-4 border-b border-border/50">
         <div className="flex items-center space-x-3">
-          <div className="w-12 h-12 rounded-full bg-gradient-secondary flex items-center justify-center shadow-lg ring-2 ring-secondary/30">
+          <div className="w-12 h-12 rounded-full bg-gradient-secondary flex items-center justify-center shadow-lg ring-2 ring-secondary/30 shrink-0 aspect-square">
             <User className="w-6 h-6 text-secondary-foreground" />
           </div>
           <div className="flex-1 min-w-0">

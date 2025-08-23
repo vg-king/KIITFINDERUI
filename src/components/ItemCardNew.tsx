@@ -71,7 +71,7 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false }: ItemCa
       <div className="p-3 sm:p-6 pb-0">
         <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
           {/* User Avatar */}
-          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shadow-lg border-2 border-white/20 ring-1 ring-primary/30 shrink-0">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shadow-lg border-2 border-white/20 ring-1 ring-primary/30 shrink-0 aspect-square">
             <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
           {/* User Info */}
@@ -134,7 +134,7 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false }: ItemCa
           {/* Category */}
           {item.category && (
             <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg sm:rounded-xl bg-black/20 border border-gray-700/30">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shrink-0 shadow-md">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shrink-0 shadow-md aspect-square">
                 <Star className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
               </div>
               <div className="min-w-0 flex-1">
@@ -147,7 +147,7 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false }: ItemCa
           {/* Location */}
           {item.location && (
             <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg sm:rounded-xl bg-black/20 border border-gray-700/30">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shrink-0 shadow-md">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shrink-0 shadow-md aspect-square">
                 <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
               </div>
               <div className="min-w-0 flex-1">
@@ -163,7 +163,7 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false }: ItemCa
           <div className="mb-3 sm:mb-4">
             <div className="relative overflow-hidden p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-yellow-500/20 via-orange-500/20 to-red-500/20 border border-yellow-500/30 group-hover:from-yellow-500/30 group-hover:via-orange-500/30 group-hover:to-red-500/30 transition-all duration-300">
               <div className="flex items-center gap-3 sm:gap-4">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shrink-0 ring-2 ring-yellow-400/30">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg shrink-0 ring-2 ring-yellow-400/30 aspect-square">
                   <Award className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">

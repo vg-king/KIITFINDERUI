@@ -97,9 +97,9 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
           {/* User Profile Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 w-10 sm:h-12 sm:w-12 rounded-full p-0 hover:bg-transparent">
-                <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-gradient-primary flex items-center justify-center shadow-lg ring-2 ring-primary/20 hover:ring-primary/40 transition-all duration-300">
-                  <User className="h-5 w-5 sm:h-6 sm:w-6 text-primary-foreground" />
+              <Button variant="ghost" className="relative p-0 hover:bg-transparent">
+                <div className="w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center shadow-lg ring-2 ring-primary/20 hover:ring-primary/40 transition-all duration-300 shrink-0 aspect-square">
+                  <User className="w-6 h-6 text-primary-foreground" />
                 </div>
               </Button>
             </DropdownMenuTrigger>
