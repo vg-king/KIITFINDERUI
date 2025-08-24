@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { 
   Dialog,
   DialogContent,
@@ -19,7 +20,7 @@ import { userService } from '@/services/userService';
 import { Item } from '@/types/item';
 import { User } from '@/types/auth';
 import { useToast } from '@/hooks/use-toast';
-import { Users, Package, Trash2, Settings, Eye, AlertCircle } from 'lucide-react';
+import { Users, Package, Trash2, Settings, Eye, AlertCircle, Menu, X } from 'lucide-react';
 
 export const AdminPanel = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -30,6 +31,7 @@ export const AdminPanel = () => {
   const [loadingUsers, setLoadingUsers] = useState(true);
   const [loadingUserItems, setLoadingUserItems] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{type: 'user' | 'item', id: number} | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -148,31 +150,64 @@ export const AdminPanel = () => {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      
-      <div className="flex-1 p-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center gap-2">
-              <Settings className="w-10 h-10" />
-              Admin Panel
-            </h1>
-            <p className="text-muted-foreground">
-              Manage users and items across the platform
-            </p>
-          </div>
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block">
+        <Sidebar />
+      </div>
 
-          <Tabs defaultValue="items" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 rounded-3xl p-1 bg-gradient-card mb-8">
-              <TabsTrigger value="items" className="rounded-2xl">
-                <Package className="w-4 h-4 mr-2" />
-                Items ({items.length})
-              </TabsTrigger>
-              <TabsTrigger value="users" className="rounded-2xl">
-                <Users className="w-4 h-4 mr-2" />
-                Users ({users.length})
-              </TabsTrigger>
-            </TabsList>
+      {/* Mobile Sidebar */}
+      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+        <SheetContent side="left" className="p-0 w-64">
+          <Sidebar />
+        </SheetContent>
+      </Sheet>
+      
+      <div className="flex-1 flex flex-col">
+        {/* Mobile Header */}
+        <div className="lg:hidden flex items-center justify-between p-4 border-b border-border/50 bg-background/80 backdrop-blur-lg">
+          <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="sm" className="lg:hidden">
+                <Menu className="w-5 h-5" />
+              </Button>
+            </SheetTrigger>
+          </Sheet>
+          
+          <h1 className="text-lg font-bold text-foreground flex items-center gap-2">
+            <Settings className="w-5 h-5" />
+            Admin Panel
+          </h1>
+          
+          <div className="w-10"></div> {/* Spacer for centering */}
+        </div>
+
+        {/* Main Content */}
+        <div className="flex-1 p-4 lg:p-8">
+          <div className="max-w-7xl mx-auto">
+            {/* Desktop Header */}
+            <div className="mb-8 hidden lg:block">
+              <h1 className="text-4xl font-bold text-foreground mb-2 flex items-center gap-2">
+                <Settings className="w-10 h-10" />
+                Admin Panel
+              </h1>
+              <p className="text-muted-foreground">
+                Manage users and items across the platform
+              </p>
+            </div>
+
+            <Tabs defaultValue="items" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 rounded-3xl p-1 bg-gradient-card mb-6 lg:mb-8">
+                <TabsTrigger value="items" className="rounded-2xl text-sm">
+                  <Package className="w-4 h-4 mr-2" />
+                  <span className="hidden sm:inline">Items ({items.length})</span>
+                  <span className="sm:hidden">Items</span>
+                </TabsTrigger>
+                <TabsTrigger value="users" className="rounded-2xl text-sm">
+                  <Users className="w-4 h-4 mr-2" />
+                  <span className="hidden sm:inline">Users ({users.length})</span>
+                  <span className="sm:hidden">Users</span>
+                </TabsTrigger>
+              </TabsList>
 
             <TabsContent value="items">
               {loadingItems ? (
@@ -181,7 +216,7 @@ export const AdminPanel = () => {
                   <p className="text-muted-foreground">Loading items...</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
                   {items.map((item) => (
                     <ItemCardNew 
                       key={item.id} 
@@ -201,14 +236,14 @@ export const AdminPanel = () => {
                   <p className="text-muted-foreground">Loading users...</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
                   {users.map((user) => (
                     <Card key={user.id} className="card-soft">
-                      <CardHeader>
-                        <CardTitle className="flex items-center justify-between">
+                      <CardHeader className="pb-3">
+                        <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                           <span className="flex items-center gap-2">
-                            {user.name}
-                            <Badge variant={user.role === 'ADMIN' ? 'destructive' : 'secondary'}>
+                            <span className="truncate">{user.name}</span>
+                            <Badge variant={user.role === 'ADMIN' ? 'destructive' : 'secondary'} className="text-xs">
                               {user.role}
                             </Badge>
                           </span>
@@ -219,11 +254,13 @@ export const AdminPanel = () => {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleViewUserItems(user)}
+                                  className="flex-1 sm:flex-none"
                                 >
-                                  <Eye className="w-4 h-4" />
+                                  <Eye className="w-4 h-4 mr-1 sm:mr-0" />
+                                  <span className="sm:hidden">View Items</span>
                                 </Button>
                               </DialogTrigger>
-                              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto mx-4">
                                 <DialogHeader>
                                   <DialogTitle>Items by {user.name}</DialogTitle>
                                   <DialogDescription>
@@ -260,15 +297,17 @@ export const AdminPanel = () => {
                               variant="destructive"
                               size="sm"
                               onClick={() => confirmDelete('user', user.id)}
+                              className="flex-1 sm:flex-none"
                             >
-                              <Trash2 className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4 mr-1 sm:mr-0" />
+                              <span className="sm:hidden">Delete</span>
                             </Button>
                           </div>
                         </CardTitle>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="pt-0">
                         <div className="space-y-2">
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground truncate">
                             <strong>Email:</strong> {user.email}
                           </p>
                           <p className="text-sm text-muted-foreground">
@@ -285,7 +324,7 @@ export const AdminPanel = () => {
 
           {/* Delete Confirmation Dialog */}
           <Dialog open={!!deleteConfirm} onOpenChange={() => setDeleteConfirm(null)}>
-            <DialogContent>
+            <DialogContent className="mx-4">
               <DialogHeader>
                 <DialogTitle className="flex items-center gap-2">
                   <AlertCircle className="w-5 h-5 text-destructive" />
@@ -300,16 +339,17 @@ export const AdminPanel = () => {
                   )}
                 </DialogDescription>
               </DialogHeader>
-              <div className="flex justify-end gap-2 mt-6">
-                <Button variant="outline" onClick={() => setDeleteConfirm(null)}>
+              <div className="flex flex-col sm:flex-row justify-end gap-2 mt-6">
+                <Button variant="outline" onClick={() => setDeleteConfirm(null)} className="sm:order-1">
                   Cancel
                 </Button>
-                <Button variant="destructive" onClick={executeDelete}>
+                <Button variant="destructive" onClick={executeDelete} className="sm:order-2">
                   Delete {deleteConfirm?.type}
                 </Button>
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
       </div>
     </div>
