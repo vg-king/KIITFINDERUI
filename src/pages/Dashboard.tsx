@@ -8,10 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { itemService } from '@/services/itemService';
 import { Item } from '@/types/item';
 import { useToast } from '@/hooks/use-toast';
-import { Search, Filter, ChevronDown, Loader2, AlertCircle, CheckCircle, Package } from 'lucide-react';
+import { Search, Filter, ChevronDown, Loader2, AlertCircle, CheckCircle, Package, Menu } from 'lucide-react';
 
 export const Dashboard = () => {
   const [items, setItems] = useState<Item[]>([]);
@@ -26,6 +27,7 @@ export const Dashboard = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [itemsPerPage] = useState(12);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -137,12 +139,36 @@ export const Dashboard = () => {
       />
       
       <div className="flex">
-        {/* Hide sidebar on mobile, show as overlay when needed */}
+        {/* Desktop Sidebar */}
         <div className="hidden lg:block">
           <Sidebar />
         </div>
+
+        {/* Mobile Sidebar */}
+        <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+          <SheetContent side="left" className="p-0 w-64">
+            <Sidebar />
+          </SheetContent>
+        </Sheet>
         
         <main className="flex-1 p-3 sm:p-6 lg:p-8">
+          {/* Mobile Header with Hamburger */}
+          <div className="lg:hidden flex items-center justify-between mb-4 p-2 border-b border-border/50">
+            <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+            </Sheet>
+            
+            <h1 className="text-lg font-bold text-foreground">
+              Lost & Found
+            </h1>
+            
+            <div className="w-10"></div> {/* Spacer for centering */}
+          </div>
+
           <div className="max-w-7xl mx-auto">
             {/* Header */}
             <div className="mb-4 sm:mb-6 lg:mb-8">

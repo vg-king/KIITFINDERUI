@@ -116,12 +116,6 @@ export const Sidebar = () => {
               }`}>
                 {isLoggedIn ? userRole : 'Guest'}
               </span>
-              {/* Temporary Admin Panel Direct Link */}
-              {userRole === 'ADMIN' && (
-                <Link to="/admin" className="text-xs text-purple-300 hover:text-purple-200 underline">
-                  Admin Panel
-                </Link>
-              )}
             </div>
           </div>
         </div>
