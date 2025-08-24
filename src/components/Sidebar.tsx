@@ -81,6 +81,9 @@ export const Sidebar = () => {
   const showAuthWarning = !user || !userRole;
   const isLoggedIn = user && userRole;
 
+  // Debug: Log the current state
+  console.log('Sidebar Debug:', { user, userRole, visibleMenuItems, isLoggedIn });
+
   return (
     <div className="w-64 bg-gradient-card border-r border-border/50 h-screen flex flex-col">
       {/* Logo */}
@@ -113,6 +116,12 @@ export const Sidebar = () => {
               }`}>
                 {isLoggedIn ? userRole : 'Guest'}
               </span>
+              {/* Temporary Admin Panel Direct Link */}
+              {userRole === 'ADMIN' && (
+                <Link to="/admin" className="text-xs text-purple-300 hover:text-purple-200 underline">
+                  Admin Panel
+                </Link>
+              )}
             </div>
           </div>
         </div>

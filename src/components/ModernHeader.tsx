@@ -53,7 +53,7 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-3 sm:px-6">
         
         {/* Primary Action Button */}
-        <div className="flex-1 flex justify-start sm:justify-center">
+        <div className="flex-1 flex justify-start sm:justify-center gap-2">
           <Link to="/report-lost">
             <Button className="btn-primary-modern px-3 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-semibold shadow-lg">
               <Plus className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
@@ -61,6 +61,17 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
               <span className="sm:hidden">Report</span>
             </Button>
           </Link>
+          
+          {/* Temporary Admin Panel Button */}
+          {userRole === 'ADMIN' && (
+            <Link to="/admin">
+              <Button variant="outline" className="px-3 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-semibold">
+                <Settings className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+                <span className="hidden sm:inline">Admin Panel</span>
+                <span className="sm:hidden">Admin</span>
+              </Button>
+            </Link>
+          )}
         </div>
 
         {/* View Toggle Buttons - Hidden on very small screens */}
