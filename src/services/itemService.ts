@@ -15,6 +15,27 @@ export const itemService = {
     }
   },
 
+  // Admin-specific method to get all items with admin privileges
+  async getAllItemsAdmin(): Promise<Item[]> {
+    try {
+      // Check admin permissions
+      if (!authService.isAdmin()) {
+        toast({
+          title: "Access Denied",
+          description: "You need admin privileges to view all items.",
+          variant: "destructive",
+        });
+        throw new Error('Admin access required');
+      }
+
+      const response = await api.get('/admin/items');
+      return Array.isArray(response.data) ? response.data : [];
+    } catch (error: any) {
+      // Error already handled by axios interceptor
+      throw error;
+    }
+  },
+
   async getItemById(id: number): Promise<Item> {
     try {
       if (!id || id <= 0) {
@@ -76,7 +97,9 @@ export const itemService = {
         throw new Error('Authentication required');
       }
 
-      await api.delete(`/items/${id}`);
+      // Use admin endpoint if user is admin
+      const endpoint = userRole === 'ADMIN' ? `/admin/item/${id}` : `/items/${id}`;
+      await api.delete(endpoint);
       
       toast({
         title: "Item Deleted",

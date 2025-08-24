@@ -17,7 +17,7 @@ export const userService = {
         throw new Error('Admin access required');
       }
 
-      const response = await api.get('/users');
+      const response = await api.get('/admin/users');
       return Array.isArray(response.data) ? response.data : [];
     } catch (error: any) {
       // Error already handled by axios interceptor
@@ -52,13 +52,37 @@ export const userService = {
         throw new Error('Cannot delete own account');
       }
 
-      await api.delete(`/users/${id}`);
+      await api.delete(`/admin/users/${id}`);
       
       toast({
         title: "User Deleted",
         description: "The user has been successfully deleted.",
         variant: "default",
       });
+    } catch (error: any) {
+      // Error already handled by axios interceptor
+      throw error;
+    }
+  },
+
+  async getUserItems(userId: number): Promise<any[]> {
+    try {
+      // Check admin permissions
+      if (!authService.isAdmin()) {
+        toast({
+          title: "Access Denied",
+          description: "You need admin privileges to view user items.",
+          variant: "destructive",
+        });
+        throw new Error('Admin access required');
+      }
+
+      if (!userId || userId <= 0) {
+        throw new Error('Invalid user ID');
+      }
+
+      const response = await api.get(`/admin/users/${userId}/items`);
+      return Array.isArray(response.data) ? response.data : [];
     } catch (error: any) {
       // Error already handled by axios interceptor
       throw error;
