@@ -127,13 +127,6 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
                 <DropdownMenuSeparator />
               </div>
               
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
-              </DropdownMenuItem>
-              
-              <DropdownMenuSeparator />
-              
               <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
