@@ -8,7 +8,13 @@ export const itemService = {
   async getAllItems(): Promise<Item[]> {
     try {
       const response = await api.get('/items');
-      return Array.isArray(response.data) ? response.data : [];
+      const items = Array.isArray(response.data) ? response.data : [];
+      
+      // Debug: Log the first few items to see their structure
+      console.log('Backend Items Sample:', items.slice(0, 2));
+      console.log('First item status:', items[0]?.status);
+      
+      return items;
     } catch (error: any) {
       // Error already handled by axios interceptor
       throw error;

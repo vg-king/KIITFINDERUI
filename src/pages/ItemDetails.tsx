@@ -2,10 +2,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
+import { StatusBadge } from '@/components/StatusBadge';
+import { FoundButton } from '@/components/FoundButton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { itemService } from '@/services/itemService';
+import { authService } from '@/services/authService';
 import { Item } from '@/types/item';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar, MapPin, User, Phone, ArrowLeft, Star, CheckCircle, AlertCircle, Award, Package } from 'lucide-react';
@@ -16,6 +19,20 @@ export const ItemDetails = () => {
   const [item, setItem] = useState<Item | null>(null);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const currentUser = authService.getCurrentUserFromStorage();
+
+  // Check if current user can see "I Found This" button
+  const title = (item?.name || item?.title || '').toLowerCase();
+  let effectiveStatus = item?.status;
+  
+  // If the title suggests it's found but status says lost, correct it
+  if (title.includes('found') && item?.status === 'LOST') {
+    effectiveStatus = 'FOUND_CONFIRMED';
+  }
+  
+  const canReportFound = effectiveStatus === 'LOST' && 
+                        currentUser && 
+                        item?.postedById !== currentUser.id;
 
   useEffect(() => {
     if (id) {
@@ -39,22 +56,17 @@ export const ItemDetails = () => {
   };
 
   const getStatusBadge = () => {
-    if (item?.status === 'FOUND') {
-      return (
-        <Badge className="bg-gradient-to-r from-emerald-500 to-green-600 text-white border-0 shadow-lg shadow-emerald-500/25 text-sm sm:text-base lg:text-lg px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 font-semibold">
-          <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 mr-1 sm:mr-1.5 lg:mr-2" />
-          Found
-        </Badge>
-      );
-    } else if (item?.status === 'LOST') {
-      return (
-        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-lg shadow-orange-500/25 text-sm sm:text-base lg:text-lg px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 font-semibold">
-          <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 mr-1 sm:mr-1.5 lg:mr-2" />
-          Lost
-        </Badge>
-      );
+    // Handle inconsistent data - if title contains "found" but status is wrong
+    const title = (item?.name || item?.title || '').toLowerCase();
+    let displayStatus = item?.status;
+    
+    // If the title suggests it's found but status says lost, prioritize found
+    if (title.includes('found') && item?.status === 'LOST') {
+      displayStatus = 'FOUND_CONFIRMED';
     }
-    return null;
+    
+    if (!displayStatus) return null;
+    return <StatusBadge status={displayStatus} size="lg" />;
   };
 
   const formatDate = (dateString: string) => {
@@ -122,15 +134,32 @@ export const ItemDetails = () => {
       
       <div className="flex-1 p-3 sm:p-4 lg:p-6 xl:p-8">
         <div className="max-w-6xl mx-auto">
-          {/* Back Button */}
-          <Button
-            onClick={() => navigate('/dashboard')}
-            variant="ghost"
-            className="mb-4 sm:mb-6 text-gray-300 hover:text-white hover:bg-white/10 text-sm sm:text-base"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
-          </Button>
+          {/* Header with Back Button and Actions */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+            <Button
+              onClick={() => navigate('/dashboard')}
+              variant="ghost"
+              className="self-start text-gray-300 hover:text-white hover:bg-white/10 text-sm sm:text-base"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+            
+            {/* Action Buttons */}
+            {canReportFound && (
+              <FoundButton
+                itemId={item.id}
+                itemName={item.name || item.title || 'Unknown Item'}
+                onFound={() => {
+                  // Refresh item details after reporting found
+                  if (id) {
+                    fetchItem(parseInt(id));
+                  }
+                }}
+                className="self-start sm:self-center"
+              />
+            )}
+          </div>
 
           {/* Main Content - Stack on mobile, side-by-side on desktop */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
@@ -206,15 +235,17 @@ export const ItemDetails = () => {
                     </div>
                   </div>
 
-                  {/* Date Reported - only show if valid */}
-                  {formatDate(item.dateReported) && (
+                  {/* Date Reported - prefer formatted date from backend */}
+                  {(item.createdAtFormatted || formatDate(item.dateReported)) && (
                     <div className="flex items-center gap-3 sm:gap-4">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shrink-0">
                         <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs sm:text-sm font-medium text-gray-400 uppercase tracking-wide">Date Reported</p>
-                        <p className="text-sm sm:text-base lg:text-lg font-semibold text-white">{formatDate(item.dateReported)}</p>
+                        <p className="text-xs sm:text-sm font-medium text-gray-400 uppercase tracking-wide">Posted</p>
+                        <p className="text-sm sm:text-base lg:text-lg font-semibold text-white">
+                          {item.createdAtFormatted || formatDate(item.dateReported)}
+                        </p>
                       </div>
                     </div>
                   )}

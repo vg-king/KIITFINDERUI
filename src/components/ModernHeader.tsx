@@ -21,8 +21,8 @@ import {
 import FancyToggle from './FancyToggle';
 
 interface ModernHeaderProps {
-  onViewChange?: (view: 'all' | 'lost' | 'found') => void;
-  currentView?: 'all' | 'lost' | 'found';
+  onViewChange?: (view: 'all' | 'lost' | 'found' | 'pending') => void;
+  currentView?: 'all' | 'lost' | 'found' | 'pending';
 }
 
 export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeaderProps) => {
@@ -43,12 +43,12 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
 
   const getViewButtonClass = (view: string) => {
     return currentView === view 
-      ? "bg-primary text-primary-foreground rounded-full px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-300"
-      : "bg-muted/50 text-muted-foreground hover:bg-muted rounded-full px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-300 hover:text-foreground";
+      ? "bg-slate-700/80 text-slate-100 rounded-full px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-300 shadow-sm"
+      : "bg-transparent text-slate-400 hover:bg-slate-800/60 hover:text-slate-200 rounded-full px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-medium transition-all duration-300";
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-lg">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-700/40 bg-slate-950/90 backdrop-blur-lg">
       <div className="container mx-auto flex h-14 sm:h-16 items-center justify-between px-3 sm:px-6">
         
         {/* Primary Action Button */}
@@ -63,7 +63,7 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
         </div>
 
         {/* View Toggle Buttons - Hidden on very small screens */}
-        <div className="hidden xs:flex items-center space-x-1 sm:space-x-2 bg-muted/30 p-1 rounded-full">
+        <div className="hidden xs:flex items-center space-x-1 sm:space-x-2 bg-slate-900/60 p-1 rounded-full border border-slate-700/40">
           <button
             onClick={() => onViewChange?.('all')}
             className={getViewButtonClass('all')}
@@ -82,6 +82,13 @@ export const ModernHeader = ({ onViewChange, currentView = 'all' }: ModernHeader
             className={getViewButtonClass('found')}
           >
             Found
+          </button>
+          <button
+            onClick={() => onViewChange?.('pending')}
+            className={getViewButtonClass('pending')}
+          >
+            <span className="hidden sm:inline">Pending</span>
+            <span className="sm:hidden">Pend</span>
           </button>
         </div>
 

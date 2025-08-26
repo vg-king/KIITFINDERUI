@@ -5,7 +5,7 @@ export interface Item {
   title?: string; // Frontend compatibility
   description: string;
   category: string;
-  status?: 'LOST' | 'FOUND';
+  status?: 'LOST' | 'FOUND_PENDING' | 'FOUND_CONFIRMED';
   location: string;
   dateReported?: string;
   contactInfo?: string;
@@ -16,6 +16,7 @@ export interface Item {
   imageUrl?: string;
   reward?: number; // Backend uses number, not string
   createAt?: string; // Backend creation timestamp
+  createdAtFormatted?: string; // New formatted date field from backend
   updatedAt?: string; // Backend update timestamp
 }
 

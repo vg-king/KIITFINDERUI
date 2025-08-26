@@ -6,88 +6,54 @@ import { Item } from '@/types/item';
 import { Link } from 'react-router-dom';
 import { authService } from '@/services/authService';
 import { cn } from '@/lib/utils';
-import { StatusBadge } from './StatusBadge';
-import { FoundButton } from './FoundButton';
 
 interface ItemCardNewProps {
   item: Item;
   onDelete?: (id: number) => void;
   showDeleteButton?: boolean;
-  onItemUpdate?: () => void;
 }
 
-export const ItemCardNew = ({ item, onDelete, showDeleteButton = false, onItemUpdate }: ItemCardNewProps) => {
+export const ItemCardNew = ({ item, onDelete, showDeleteButton = false }: ItemCardNewProps) => {
   const currentUser = authService.getCurrentUserFromStorage();
   const canDelete = showDeleteButton && (currentUser?.role === 'ADMIN' || item.userId === currentUser?.id);
-  
-  // Check if current user can see "I Found This" button
-  const title = (item.name || item.title || '').toLowerCase();
-  let effectiveStatus = item.status;
-  
-  // If the title suggests it's found but status says lost, correct it
-  if (title.includes('found') && item.status === 'LOST') {
-    effectiveStatus = 'FOUND_CONFIRMED';
-  }
-  
-  const canReportFound = effectiveStatus === 'LOST' && 
-                        currentUser && 
-                        item.postedById !== currentUser.id;
 
   const getStatusBadge = () => {
-    // Handle inconsistent data - if title contains "found" but status is wrong
-    const title = (item.name || item.title || '').toLowerCase();
-    let displayStatus = item.status;
-    
-    // If the title suggests it's found but status says lost, prioritize found
-    if (title.includes('found') && item.status === 'LOST') {
-      displayStatus = 'FOUND_CONFIRMED';
+    if (item.status === 'FOUND') {
+      return (
+        <Badge className="bg-gradient-to-r from-emerald-500 to-green-600 text-white border-0 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 transition-all duration-300 font-medium px-2 py-1 text-xs">
+          <CheckCircle className="w-3 h-3 mr-1" />
+          Found
+        </Badge>
+      );
+    } else if (item.status === 'LOST') {
+      return (
+        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 font-medium px-2 py-1 text-xs">
+          <AlertCircle className="w-3 h-3 mr-1" />
+          Lost
+        </Badge>
+      );
     }
-    
-    if (!displayStatus) return null;
-    
-    // Use the StatusBadge component with corrected status
-    return <StatusBadge status={displayStatus} size="sm" />;
+    // Return null if no valid status - don't show anything
+    return null;
   };
 
   const getCardGradient = () => {
-    // Handle inconsistent data - if title contains "found" but status is wrong
-    const title = (item.name || item.title || '').toLowerCase();
-    let displayStatus = item.status;
-    
-    // If the title suggests it's found but status says lost, prioritize found
-    if (title.includes('found') && item.status === 'LOST') {
-      displayStatus = 'FOUND_CONFIRMED';
-    }
-    
-    if (displayStatus === 'FOUND_CONFIRMED') {
+    if (item.status === 'FOUND') {
       return "from-emerald-950/80 via-green-900/60 to-teal-950/80 border-emerald-500/30";
-    } else if (displayStatus === 'FOUND_PENDING') {
-      return "from-yellow-950/80 via-amber-900/60 to-orange-950/80 border-yellow-500/30";
-    } else if (displayStatus === 'LOST') {
-      return "from-slate-950/90 via-blue-950/70 to-slate-900/90 border-slate-600/40";
+    } else if (item.status === 'LOST') {
+      return "from-orange-950/80 via-red-900/60 to-pink-950/80 border-orange-500/30";
     }
-    // Default darker navy gradient
-    return "from-slate-950/90 via-blue-950/70 to-slate-900/90 border-slate-600/40";
+    // Default neutral gradient for items without status
+    return "from-slate-950/80 via-gray-900/60 to-zinc-950/80 border-slate-500/30";
   };
 
   const getHoverGradient = () => {
-    // Handle inconsistent data - if title contains "found" but status is wrong
-    const title = (item.name || item.title || '').toLowerCase();
-    let displayStatus = item.status;
-    
-    // If the title suggests it's found but status says lost, prioritize found
-    if (title.includes('found') && item.status === 'LOST') {
-      displayStatus = 'FOUND_CONFIRMED';
-    }
-    
-    if (displayStatus === 'FOUND_CONFIRMED') {
+    if (item.status === 'FOUND') {
       return "hover:from-emerald-900/90 hover:via-green-800/70 hover:to-teal-900/90";
-    } else if (displayStatus === 'FOUND_PENDING') {
-      return "hover:from-yellow-900/90 hover:via-amber-800/70 hover:to-orange-900/90";
-    } else if (displayStatus === 'LOST') {
-      return "hover:from-slate-900/95 hover:via-blue-900/80 hover:to-slate-800/95";
+    } else if (item.status === 'LOST') {
+      return "hover:from-orange-900/90 hover:via-red-800/70 hover:to-pink-900/90";
     }
-    return "hover:from-slate-900/95 hover:via-blue-900/80 hover:to-slate-800/95";
+    return "hover:from-slate-900/90 hover:via-gray-800/70 hover:to-zinc-900/90";
   };
 
   return (
@@ -107,15 +73,21 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false, onItemUp
           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center shadow-lg border-2 border-white/20 ring-1 ring-primary/30 shrink-0 aspect-square">
             <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
           </div>
-          {/* User Info - Full width without status badge interference */}
+          {/* User Info */}
           <div className="flex-1 min-w-0">
             <p className="text-xs sm:text-sm font-semibold text-white truncate">
               {item.postedByName || item.userName || 'Anonymous User'}
             </p>
             <p className="text-xs text-gray-300 truncate">
-              {item.createdAtFormatted ? `posted ${item.createdAtFormatted}` : 'reported'} • {item.location}
+              reported • {item.location}
             </p>
           </div>
+          {/* Status Badge - Only show if status exists */}
+          {getStatusBadge() && (
+            <div className="shrink-0">
+              {getStatusBadge()}
+            </div>
+          )}
         </div>
       </div>
 
@@ -128,12 +100,6 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false, onItemUp
             alt={item.name || item.title || 'Item image'}
             className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
           />
-          {/* Status Badge - Positioned at top-right */}
-          {getStatusBadge() && (
-            <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-20">
-              {getStatusBadge()}
-            </div>
-          )}
           {/* Floating elements on image - only on larger screens */}
           <div className="hidden sm:block absolute top-3 left-3 z-20 opacity-0 group-hover:opacity-100 transition-all duration-500">
             <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
@@ -142,13 +108,7 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false, onItemUp
           </div>
         </div>
       ) : (
-        <div className="relative mx-3 sm:mx-6 mb-3 sm:mb-4 h-36 sm:h-48 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl sm:rounded-2xl flex items-center justify-center border border-gray-700/30">
-          {/* Status Badge - Positioned at top-right even for no-image cards */}
-          {getStatusBadge() && (
-            <div className="absolute top-2 sm:top-3 right-2 sm:right-3 z-20">
-              {getStatusBadge()}
-            </div>
-          )}
+        <div className="mx-3 sm:mx-6 mb-3 sm:mb-4 h-36 sm:h-48 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl sm:rounded-2xl flex items-center justify-center border border-gray-700/30">
           <div className="text-center">
             <Package className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-2" />
             <p className="text-xs text-gray-400">No Image</p>
@@ -220,39 +180,26 @@ export const ItemCardNew = ({ item, onDelete, showDeleteButton = false, onItemUp
       </CardContent>
       
       {/* Footer */}
-      <CardFooter className="p-3 sm:p-6 pt-0 flex flex-col gap-2">
-        {/* Main buttons row */}
-        <div className="flex gap-2 sm:gap-3 w-full">
-          <Link to={`/item/${item.id}`} className="flex-1">
-            <Button 
-              variant="outline" 
-              className="w-full rounded-xl sm:rounded-2xl border-2 border-primary/30 hover:border-primary bg-black/30 hover:bg-primary hover:text-white transition-all duration-300 group/btn backdrop-blur-sm shadow-lg hover:shadow-xl font-semibold text-white text-xs sm:text-sm h-8 sm:h-auto py-2 sm:py-3"
-            >
-              <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 group-hover/btn:scale-110 transition-transform duration-300" />
-              <span className="hidden sm:inline">View Details</span>
-              <span className="sm:hidden">Details</span>
-            </Button>
-          </Link>
-          
-          {canDelete && onDelete && (
-            <Button
-              variant="ghost"
-              onClick={() => onDelete(item.id)}
-              className="text-destructive hover:text-white hover:bg-destructive rounded-xl sm:rounded-2xl transition-all duration-300 hover:shadow-lg backdrop-blur-sm border-2 border-destructive/20 hover:border-destructive bg-black/30 px-2 sm:px-4 h-8 sm:h-auto py-2 sm:py-3"
-            >
-              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-            </Button>
-          )}
-        </div>
+      <CardFooter className="p-3 sm:p-6 pt-0 flex gap-2 sm:gap-3">
+        <Link to={`/item/${item.id}`} className="flex-1">
+          <Button 
+            variant="outline" 
+            className="w-full rounded-xl sm:rounded-2xl border-2 border-primary/30 hover:border-primary bg-black/30 hover:bg-primary hover:text-white transition-all duration-300 group/btn backdrop-blur-sm shadow-lg hover:shadow-xl font-semibold text-white text-xs sm:text-sm h-8 sm:h-auto py-2 sm:py-3"
+          >
+            <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 group-hover/btn:scale-110 transition-transform duration-300" />
+            <span className="hidden sm:inline">View Details</span>
+            <span className="sm:hidden">Details</span>
+          </Button>
+        </Link>
         
-        {/* Found Button - full width on its own row to stay within card */}
-        {canReportFound && (
-          <FoundButton
-            itemId={item.id}
-            itemName={item.name || item.title || 'Unknown Item'}
-            onFound={onItemUpdate}
-            className="w-full rounded-xl sm:rounded-2xl text-xs sm:text-sm h-8 sm:h-auto py-2 sm:py-3 bg-emerald-600 hover:bg-emerald-700 text-white border-emerald-500/30"
-          />
+        {canDelete && onDelete && (
+          <Button
+            variant="ghost"
+            onClick={() => onDelete(item.id)}
+            className="text-destructive hover:text-white hover:bg-destructive rounded-xl sm:rounded-2xl transition-all duration-300 hover:shadow-lg backdrop-blur-sm border-2 border-destructive/20 hover:border-destructive bg-black/30 px-2 sm:px-4 h-8 sm:h-auto py-2 sm:py-3"
+          >
+            <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+          </Button>
         )}
       </CardFooter>
 

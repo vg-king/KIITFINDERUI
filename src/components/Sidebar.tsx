@@ -81,11 +81,8 @@ export const Sidebar = () => {
   const showAuthWarning = !user || !userRole;
   const isLoggedIn = user && userRole;
 
-  // Debug: Log the current state
-  console.log('Sidebar Debug:', { user, userRole, visibleMenuItems, isLoggedIn });
-
   return (
-    <div className="w-64 bg-gradient-card border-r border-border/50 h-screen flex flex-col">
+    <div className="w-64 bg-gradient-card border-r border-border/50 h-full flex flex-col">
       {/* Logo */}
       <div className="p-6 border-b border-border/50">
         <Link to="/dashboard" className="flex items-center space-x-3">
@@ -98,8 +95,11 @@ export const Sidebar = () => {
         </Link>
       </div>
 
+      {/* Spacer for better positioning */}
+      <div className="pt-4"></div>
+
       {/* User Info */}
-      <div className="p-4 border-b border-border/50">
+      <div className="px-4 pb-4 border-b border-border/50">
         <div className="flex items-center space-x-3">
           <div className="w-12 h-12 rounded-full bg-gradient-secondary flex items-center justify-center shadow-lg ring-2 ring-secondary/30 shrink-0 aspect-square">
             <User className="w-6 h-6 text-secondary-foreground" />

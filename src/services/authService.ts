@@ -198,14 +198,12 @@ export const authService = {
   getUserRole(): 'USER' | 'ADMIN' | null {
     // First try to get role from JWT token
     const payload = this.getTokenPayload();
-    console.log('JWT Payload:', payload); // Debug log
     if (payload?.role) {
       return payload.role;
     }
     
     // Fallback to stored user data
     const user = this.getCurrentUserFromStorage();
-    console.log('Stored User:', user); // Debug log
     return user?.role || null;
   },
 
